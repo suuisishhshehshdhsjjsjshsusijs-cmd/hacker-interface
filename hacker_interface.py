@@ -6,6 +6,9 @@ import random
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
+import os
+
+API_BASE_URL = os.environ.get("API_BASE_URL", "http://localhost:5000").rstrip("/")
 
 # إعدادات الصفحة
 st.set_page_config(page_title="Hacker Terminal v4.0", layout="wide", initial_sidebar_state="collapsed")
@@ -125,7 +128,7 @@ def connect_to_network():
     
     try:
         response = requests.post(
-            "http://localhost:5000/api/device/connect",
+            f"{API_BASE_URL}/api/device/connect",
             json={
                 "ip": st.session_state.device_ip,
                 "name": "Kali Linux Attacker",
@@ -157,7 +160,7 @@ def disconnect_from_network():
     
     try:
         response = requests.post(
-            "http://localhost:5000/api/device/disconnect",
+            f"{API_BASE_URL}/api/device/disconnect",
             json={"ip": st.session_state.device_ip},
             timeout=5
         )
@@ -232,7 +235,7 @@ def send_attack(attack_type):
     
     try:
         response = requests.post(
-            "http://localhost:5000/api/attack",
+            f"{API_BASE_URL}/api/attack",
             json={
                 "attacker_ip": st.session_state.device_ip,
                 "attack_type": attack_type,
@@ -317,7 +320,7 @@ with col2:
 
     # فحص حالة النظام
     try:
-        status_res = requests.get("http://localhost:5000/api/status", timeout=1)
+        status_res = requests.get(f"{API_BASE_URL}/api/status", timeout=1)
         if status_res.status_code == 200:
             status_data = status_res.json()
             st.markdown("<p style='color: #00ff00; font-weight: bold;'>● DEFENDER ONLINE</p>", unsafe_allow_html=True)
